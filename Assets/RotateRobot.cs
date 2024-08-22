@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RotateObject : MonoBehaviour
+public class RotateRobot : MonoBehaviour
 {
     public float rotationSpeed = 50f;
 
