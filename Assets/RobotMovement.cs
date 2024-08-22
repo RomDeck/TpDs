@@ -5,14 +5,16 @@ public class RobotMovement : MonoBehaviour
     public float speed = 5f;
     public float rotationSpeed = 100f;
     private Animator animator;
+    private Rigidbody rb;
 
     void Start()
     {
-        // Récupère le composant Animator
+        // Récupère le composant Animator et Rigidbody
         animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         float moveForward = 0f;
         float moveRight = 0f;
@@ -35,13 +37,17 @@ public class RobotMovement : MonoBehaviour
             moveRight = 1f;
         }
 
-        Vector3 moveDirection = new Vector3(moveRight, 0, moveForward);
-        transform.Translate(moveDirection * speed * Time.deltaTime, Space.World);
+        Vector3 moveDirection = new Vector3(moveRight, 0, moveForward).normalized;
+        Vector3 movement = moveDirection * speed * Time.deltaTime;
 
+        // Utiliser Rigidbody pour déplacer le robot
+        rb.MovePosition(rb.position + movement);
+
+        // Rotation
         if (moveDirection != Vector3.zero)
         {
             Quaternion toRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+            rb.rotation = Quaternion.RotateTowards(rb.rotation, toRotation, rotationSpeed * Time.deltaTime);
         }
 
         // Définir le paramètre IsWalking de l'Animator en fonction du mouvement
