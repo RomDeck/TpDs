@@ -21,11 +21,18 @@ public class MenuManager : MonoBehaviour
     public void QuitGame()
     {
         // Si on est en mode éditeur, arrêter le mode de jeu
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-            // Si on est en build, quitter l'application
-            Application.Quit();
-#endif
+        #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+        #else
+                    // Si on est en build, quitter l'application
+                    Application.Quit();
+        #endif
+    }
+
+    // fonction pour revenir au menu principal
+    public void ReturnToMenu()
+    {
+        // Charger la scène "Menu"
+        SceneManager.LoadScene("Menu");
     }
 }
