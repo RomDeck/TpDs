@@ -1,16 +1,28 @@
 using UnityEngine;
 
-public class Collectible : MonoBehaviour
+public class CollectibleItem : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("Collision détectée avec : " + other.gameObject.name);
+    private CountdownTimer countdownTimer;
 
-        if (other.CompareTag("Player"))
-        {
-            Debug.Log("Munition ramassée !");
-            Destroy(gameObject); // Détruire la munition après l'avoir ramassée
-        }
+    void Start()
+    {
+        // Trouver le CountdownTimer dans la scène
+        countdownTimer = FindObjectOfType<CountdownTimer>();
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            // Appelle la méthode CollectItem du CountdownTimer
+            if (countdownTimer != null)
+            {
+                countdownTimer.CollectItem();
+                Debug.Log("Munition ramassée !");
+            }
+
+            // Détruire l'objet après l'avoir ramassé
+            Destroy(gameObject);
+        }
+    }
 }
