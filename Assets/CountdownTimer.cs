@@ -1,6 +1,5 @@
 using UnityEngine;
 using TMPro; // Nécessaire pour utiliser TextMeshProUGUI
-using UnityEngine.SceneManagement; // Nécessaire pour recharger la scène ou changer de scène
 
 public class CountdownTimer : MonoBehaviour
 {
@@ -12,16 +11,20 @@ public class CountdownTimer : MonoBehaviour
     public TextMeshProUGUI gameOverText; // Référence au texte de fin de jeu
     public GameObject restartButton; // Référence au bouton de recommencement
     public GameObject quitButton; // Référence au bouton de quitter
+    public GameObject player; // Référence au GameObject du personnage
+    public GameObject backgroundOverlay; // Référence au fond noir transparent
 
     void Start()
     {
         // Initialise le chronomètre
         currentTime = countdownTime;
         UpdateTimerText();
-        // Assurez-vous que le texte de fin de jeu et les boutons sont cachés au début
+
+        // Assurez-vous que le texte de fin de jeu, les boutons, et le fond noir sont cachés au début
         gameOverText.gameObject.SetActive(false);
         restartButton.SetActive(false);
         quitButton.SetActive(false);
+        backgroundOverlay.SetActive(false); // Masque le fond noir transparent
     }
 
     void Update()
@@ -57,10 +60,25 @@ public class CountdownTimer : MonoBehaviour
     void TimerEnded()
     {
         timerStarted = false;
+
+        // Désactiver le script de mouvement du personnage
+        if (player != null)
+        {
+            player.GetComponent<RobotMovement>().enabled = false;
+        }
+
+        // Afficher le fond noir transparent
+        if (backgroundOverlay != null)
+        {
+            backgroundOverlay.SetActive(true);
+        }
+
+        // Afficher le texte de fin de jeu et les boutons
         gameOverText.gameObject.SetActive(true);
         restartButton.SetActive(true);
         quitButton.SetActive(true);
-        // Vous pouvez également ajouter d'autres comportements ici
+
+        // Ajoutez ici d'autres comportements si nécessaire
         Debug.Log("Le chronomètre est terminé!");
     }
 
@@ -71,5 +89,4 @@ public class CountdownTimer : MonoBehaviour
             timerText.text = $"Temps restant : {currentTime:F2}s";
         }
     }
-
 }
