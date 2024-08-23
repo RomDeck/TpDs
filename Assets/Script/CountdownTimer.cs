@@ -18,6 +18,10 @@ public class CountdownTimer : MonoBehaviour
     public GameObject backgroundOverlay; // Référence au fond noir transparent
     public GameObject collectiblesParent; // Référence au parent des objets à collecter
 
+    public AudioSource victoryAudioSource; // Référence à l'AudioSource pour la victoire
+    public AudioSource defeatAudioSource; // Référence à l'AudioSource pour la défaite
+    private RobotMovement robotMovement; // Référence au script RobotMovement
+
     void Start()
     {
         // Initialise le chronomètre
@@ -27,7 +31,7 @@ public class CountdownTimer : MonoBehaviour
         // Compter le nombre total d'objets à collecter
         totalCollectibles = collectiblesParent.transform.childCount;
 
-        // Log le nombre total d'objets à collecter
+        // Log le nombre total d'objets à récupérer
         Debug.Log("Nombre total d'objets à récupérer : " + totalCollectibles);
 
         // Assurez-vous que le texte de fin de jeu, les boutons, et le fond noir sont cachés au début
@@ -36,6 +40,12 @@ public class CountdownTimer : MonoBehaviour
         restartButton.SetActive(false);
         quitButton.SetActive(false);
         backgroundOverlay.SetActive(false); // Masque le fond noir transparent
+
+        // Obtenir le script RobotMovement
+        if (player != null)
+        {
+            robotMovement = player.GetComponent<RobotMovement>();
+        }
     }
 
     void Update()
@@ -89,6 +99,18 @@ public class CountdownTimer : MonoBehaviour
         restartButton.SetActive(true);
         quitButton.SetActive(true);
 
+        // Jouer le son de défaite
+        if (defeatAudioSource != null)
+        {
+            defeatAudioSource.Play();
+        }
+
+        // Arrêter le son de marche
+        if (robotMovement != null && robotMovement.footstepSource != null && robotMovement.footstepSource.isPlaying)
+        {
+            robotMovement.footstepSource.Stop();
+        }
+
         Debug.Log("Le chronomètre est terminé!");
     }
 
@@ -134,6 +156,18 @@ public class CountdownTimer : MonoBehaviour
         victoryText.gameObject.SetActive(true);
         restartButton.SetActive(true);
         quitButton.SetActive(true);
+
+        // Jouer le son de victoire
+        if (victoryAudioSource != null)
+        {
+            victoryAudioSource.Play();
+        }
+
+        // Arrêter le son de marche
+        if (robotMovement != null && robotMovement.footstepSource != null && robotMovement.footstepSource.isPlaying)
+        {
+            robotMovement.footstepSource.Stop();
+        }
 
         Debug.Log("Victoire! Tous les objets ont été ramassés.");
     }
